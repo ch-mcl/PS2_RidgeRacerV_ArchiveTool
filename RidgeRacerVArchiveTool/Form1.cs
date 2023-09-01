@@ -18,8 +18,8 @@ namespace RidgeRacerVArchiveTool
 
         public bool result = true;
         public bool close = false;
-        public int a = 0;
-        public int filecount = 0;
+        public int process = 0;
+        public int fileCount = 0;
 
         private void Form1_Shown(object sender, EventArgs e)
         {
@@ -69,9 +69,9 @@ namespace RidgeRacerVArchiveTool
 
         private void BackgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            ProgressBar1.Value = a;
-            ProgressBar1.Maximum = filecount;
-            Label1.Text = a.ToString() + "/" + filecount.ToString();
+            ProgressBar1.Value = process;
+            ProgressBar1.Maximum = fileCount;
+            Label1.Text = process.ToString() + "/" + fileCount.ToString();
         }
 
         private void BackgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -91,7 +91,7 @@ namespace RidgeRacerVArchiveTool
                 return;
             }
 
-            Label1.Text = "Exceution...";
+            Label1.Text = "Execeution...";
 
 
             radioJP.Enabled = false;
@@ -110,21 +110,15 @@ namespace RidgeRacerVArchiveTool
             else if(radioPAL.Checked == true)
             {
                 region = "PAL";
-            }else
+            }
+            else if (radioACV3A.Checked == true)
             {
                 region = "AC_RRV3_A";
             }
 
             for (int i = 1; i < path.Count(); i++)
             {
-                string fileExtension = Path.GetExtension(path[i]);
-                if (fileExtension.Length < 1 && !Directory.Exists(path[i]))
-                {
-                    MessageBox.Show($"Faild: Invalid File {path[i]}");
-                    close = true;
-                    return;
-                }
-
+                //string fileExtension = Path.GetExtension(path[i]);
 
                 RR5_TOC_Table tocTabl = new RR5_TOC_Table();
                 DataRow[] dataRows = tocTabl.tocTable.Select($"region = '{region}'");
@@ -135,6 +129,7 @@ namespace RidgeRacerVArchiveTool
                 int.TryParse(row[tocTabl.COL_NAME_TOC_ADR].ToString(), out tocAddress);
                 string arcName = row[tocTabl.COL_NAME_ARC].ToString();
 
+                fileCount = int.Parse(row[tocTabl.COL_NAME_MAX_TOC].ToString());
 
                 RR5_Archive arc = new RR5_Archive();
                 string fileName = Path.GetFileName(path[i]);
@@ -142,11 +137,10 @@ namespace RidgeRacerVArchiveTool
                 bool isDirectory = (File.GetAttributes(path[i]) & FileAttributes.Directory) == FileAttributes.Directory;
                 if (!arcName.Equals(fileName) && !isDirectory)
                 {
-                    MessageBox.Show("Please Drag & Drop R5.ALL or elf file of RidgeRacer V.");
+                    MessageBox.Show($"Please Drag & Drop R5.ALL ({region} region).");
                     close = true;
                     return;
                 }
-
 
                 string elfPath = $@"{fileDirectory}\{elfName}";
                 if (!File.Exists(elfPath))
@@ -160,7 +154,7 @@ namespace RidgeRacerVArchiveTool
                 // Unpack
                 if (arcName.Equals(fileName)) {
 
-                    string extractPath = $@"{fileDirectory}\{fileName.Replace('.', '_')}";
+                    string extractPath = $@"{fileDirectory}\{fileName.Replace('.', '_')}_extract";
                     Directory.CreateDirectory(extractPath);
 
 
@@ -168,23 +162,21 @@ namespace RidgeRacerVArchiveTool
 
                     if (result == true)
                     {
-                        MessageBox.Show("Faild: Unpack is Faild.");
+                        MessageBox.Show("Faild: Unpack.");
                         close = true;
                         return;
                     }
 
-                    MessageBox.Show("Success: Unpack is Completed.");
+                    MessageBox.Show("Success: Unpack Complete.");
                     // Pack
                 } else if (isDirectory)
                 {
                     // Experimentally features.
                     // TODO: Implement "RollBack" features when Pack is faild. 
-
-                    int fileCount = int.Parse( row[tocTabl.COL_NAME_MAX_TOC].ToString() );
                     List<string> fileSortList = new List<string>(Directory.GetFiles(path[i], "*", SearchOption.AllDirectories));
                     if (fileSortList.Count != fileCount)
                     {
-                        MessageBox.Show($"Faild: Unmaching region and file counts. Detected: {fileSortList.Count} files. Except: {filecount} files.");
+                        MessageBox.Show($"Faild: Unmaching region and file counts. Detected: {fileSortList.Count} files. Except: {fileCount} files.");
                         close = true;
                         return;
                     }
@@ -193,14 +185,16 @@ namespace RidgeRacerVArchiveTool
 
                     if (result == true)
                     {
-                        MessageBox.Show("Faild: Pack is Faild.");
+                        MessageBox.Show("Faild: Pack.");
                         close = true;
                         return;
                     }
 
-                    MessageBox.Show("Success: Pack is Completed.");
+                    MessageBox.Show("Success: Pack Complete.");
                 }
             }
+
+            Label1.Text = "Done.";
             return;
         }
     }
