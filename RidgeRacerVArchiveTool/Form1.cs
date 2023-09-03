@@ -11,9 +11,6 @@ namespace RidgeRacerVArchiveTool
 {
     public partial class Form1 : Form
     {
-        public bool result = true;
-        public bool close = false;
-
         public Form1()
         {
             InitializeComponent();
@@ -92,7 +89,6 @@ namespace RidgeRacerVArchiveTool
                 if (!arcName.Equals(fileName) && !isDirectory)
                 {
                     MessageBox.Show($"Please Drag & Drop R5.ALL ({region} region).");
-                    close = true;
                     return;
                 }
 
@@ -100,7 +96,6 @@ namespace RidgeRacerVArchiveTool
                 if (!File.Exists(elfPath))
                 {
                     MessageBox.Show($"Faild: Couldn't find {elfName}.");
-                    close = true;
                     return;
                 }
                 string arcPath = $@"{fileDirectory}\{arcName}";
@@ -238,7 +233,6 @@ namespace RidgeRacerVArchiveTool
             catch
             {
                 MessageBox.Show("Faild: Unpack."); //
-                close = true;
                 return;
             }
 
@@ -256,10 +250,16 @@ namespace RidgeRacerVArchiveTool
         {
             label1.Text = "Done.";
 
-            if (close == true)
-                Close();
+            Close();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        // Experimentally features.
+        // TODO: Implement "RollBack" features when Pack is faild.
         private void bgWorkerPack_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker bgWorker = (BackgroundWorker)sender;
@@ -282,13 +282,10 @@ namespace RidgeRacerVArchiveTool
             string srcPath;
             argments.TryGetValue("srcPath", out srcPath);
 
-            // Experimentally features.
-            // TODO: Implement "RollBack" features when Pack is faild. 
             List<string> fileSortList = new List<string>(Directory.GetFiles(srcPath, "*", SearchOption.AllDirectories));
             if (fileSortList.Count != fileCount)
             {
                 MessageBox.Show($"Faild: Unmaching region and file counts. Detected: {fileSortList.Count} files. Except: {fileCount} files."); //
-                close = true;
                 return;
             }
 
@@ -341,20 +338,18 @@ namespace RidgeRacerVArchiveTool
                     int terminator = BitConverter.ToInt32(bytes, 0x00);
                     if (terminator != 0xCC0000)
                     {
-                        MessageBox.Show("Faild: Pack."); //
-                        close = true;
+                        MessageBox.Show("Faild: Pack.");
                         return;
                     }
                 }
             }
             catch
             {
-                MessageBox.Show("Faild: Pack."); //
-                close = true;
+                MessageBox.Show("Faild: Pack.");
                 return;
             }
 
-            MessageBox.Show("Success: Pack Complete."); //
+            MessageBox.Show("Success: Pack Complete.");
 
         }
 
@@ -368,8 +363,7 @@ namespace RidgeRacerVArchiveTool
         {
             label1.Text = "Done.";
 
-            if (close == true)
-                Close();
+            Close();
         }
 
     }
