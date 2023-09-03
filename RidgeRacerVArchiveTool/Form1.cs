@@ -18,15 +18,16 @@ namespace RidgeRacerVArchiveTool
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (bgWorkerPack.IsBusy)
+            if (bgWorkerPack.IsBusy || bgWorkerUnpack.IsBusy)
             {
                 return;
             }
 
             string[] path = Environment.GetCommandLineArgs();
-            // not set files
+            // not set files or folder of extracted archive file
             if (path.Count() == 1)
             {
+                // works as "Region Select" mode.
                 return;
             }
 
