@@ -60,7 +60,7 @@ namespace RidgeRacerVArchiveTool.RR5_Lib
 
             // USA
             row = tocTable.NewRow();
-            row[COL_NAME_REGION] = "USA";
+            row[COL_NAME_REGION] = "US";
             row[COL_NAME_ARC] = "R5.ALL";
             row[COL_NAME_ELF] = "SLUS_200.02";
             row[COL_NAME_TOC_ADR] = 0x10D258;

@@ -22,7 +22,19 @@ namespace RidgeRacerVArchiveTool.Properties {
                 return defaultInstance;
             }
         }
-        
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool JPchecked {
+            get {
+                return ((bool)(this["JPchecked"]));
+            }
+            set {
+                this["JPchecked"] = value;
+            }
+        }
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
@@ -44,18 +56,6 @@ namespace RidgeRacerVArchiveTool.Properties {
             }
             set {
                 this["PALchecked"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool JPchecked {
-            get {
-                return ((bool)(this["JPchecked"]));
-            }
-            set {
-                this["JPchecked"] = value;
             }
         }
         
