@@ -56,17 +56,17 @@
             this.progressBar1.Size = new System.Drawing.Size(300, 18);
             this.progressBar1.TabIndex = 1;
             // 
-            // bgWorkerUnpack
-            // 
-            this.bgWorkerUnpack.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkerUnpack_DoWork);
-            this.bgWorkerUnpack.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgWorkerUnpack_ProgressChanged);
-            this.bgWorkerUnpack.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkerUnpack_RunWorkerCompleted);
-            // 
             // bgWorkerPack
             // 
             this.bgWorkerPack.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkerPack_DoWork);
             this.bgWorkerPack.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgWorkerPack_ProgressChanged);
             this.bgWorkerPack.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkerPack_RunWorkerCompleted);
+            // 
+            // bgWorkerUnpack
+            // 
+            this.bgWorkerUnpack.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkerUnpack_DoWork);
+            this.bgWorkerUnpack.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgWorkerUnpack_ProgressChanged);
+            this.bgWorkerUnpack.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkerUnpack_RunWorkerCompleted);
             // 
             // groupBox1
             // 
@@ -145,7 +145,7 @@
             this.Name = "Form1";
             this.Text = "Ridge Racer V Archive Tool";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Shown += new System.EventHandler(this.Form1_Shown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

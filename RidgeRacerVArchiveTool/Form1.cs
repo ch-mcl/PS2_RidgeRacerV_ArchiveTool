@@ -16,7 +16,7 @@ namespace RidgeRacerVArchiveTool
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void Form1_Shown(object sender, EventArgs e)
         {
             if (bgWorkerPack.IsBusy || bgWorkerUnpack.IsBusy)
             {
