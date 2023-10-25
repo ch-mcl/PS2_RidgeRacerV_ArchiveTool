@@ -21,8 +21,8 @@ Execution file of Ridge Racer V
 2. Drag and Drop "R5_ALL" folder
 3. You can get R5.ALL and patched execution file of Ridge Racer V
 
-## Ridge Racer Arcede Battle
-This tool also able to extract files from "Ridge Racer Arcede Battle RRV3 Ver A". (Building is potentially. Because I never tested.)
+## Ridge Racer Arcade Battle
+This tool also able to extract files from "Ridge Racer Arcade Battle RRV3 Ver A". (Building is potentially. Because I never tested.)
 
 You needs alternatively preapre those files.
 
