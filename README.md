@@ -21,6 +21,11 @@ Execution file of Ridge Racer V
 2. Drag and Drop "R5_ALL" folder
 3. You can get R5.ALL and patched execution file of Ridge Racer V
 
+## File Extension
+You can see "RR5.RAW" and "RR5.LZ" extension files.
+Those extensions are defined by me.
+And "RR5.LZ" needs decompress by LZSS(Customized for Ridge Racer V).
+
 ## Ridge Racer Arcade Battle
 This tool also able to extract files from "Ridge Racer Arcade Battle RRV3 Ver A". (Building is potentially. Because I never tested.)
 
