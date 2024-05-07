@@ -78,11 +78,8 @@ namespace RidgeRacerVArchiveTool
             int.TryParse(row[tocTabl.COL_NAME_MAX_TOC].ToString(), out fileCount);
             progressBar1.Maximum = fileCount;
 
-            for (int i = 1; i < 2/*path.Count()*/; i++)
+            for (int i = 1; i < 2; i++)
             {
-                //string fileExtension = Path.GetExtension(path[i]);
-
-
                 string fileDirectory = Path.GetDirectoryName(path[i]);
                 string fileName = Path.GetFileName(path[i]);
 
@@ -110,7 +107,7 @@ namespace RidgeRacerVArchiveTool
                 // Unpack
                 if (arcName.Equals(fileName))
                 {
-                    string destPath = $@"{fileDirectory}\{fileName.Replace('.', '_')}_extract";
+                    string destPath = $@"{fileDirectory}\{fileName.Replace('.', '_')}_unpack";
                     argments.Add("destPath", destPath);
 
                     bgWorkerUnpack.WorkerReportsProgress = true;
@@ -120,6 +117,8 @@ namespace RidgeRacerVArchiveTool
                 }
                 else if (isDirectory)
                 {
+                    string destPath = $@"{fileDirectory}\pack";
+                    argments.Add("destPath", destPath);
                     string srcPath = path[i];
                     argments.Add("srcPath", srcPath);
 
@@ -127,6 +126,7 @@ namespace RidgeRacerVArchiveTool
                     bgWorkerPack.RunWorkerAsync(argments);
 
                 }
+
             }
 
         }
@@ -181,17 +181,20 @@ namespace RidgeRacerVArchiveTool
             argments.TryGetValue("elfPath", out elfPath);
             string arcPath;
             argments.TryGetValue("arcPath", out arcPath);
-            string _strTocAddress;
-            argments.TryGetValue("tocAddress", out _strTocAddress);
+            string _str;
+            argments.TryGetValue("tocAddress", out _str);
             int tocAddress;
-            int.TryParse(_strTocAddress, out tocAddress);
+            int.TryParse(_str, out tocAddress);
+            int fileCount;
+            argments.TryGetValue("fileCount", out _str);
+            int.TryParse(_str, out fileCount);
             string destPath;
             argments.TryGetValue("destPath", out destPath);
 
-            Directory.CreateDirectory(destPath);
-
             try
             {
+                Directory.CreateDirectory(destPath);
+    
                 // elf file
                 using (FileStream elfFileStream = new FileStream(elfPath, FileMode.Open, FileAccess.Read))
                 // arc file
@@ -199,8 +202,7 @@ namespace RidgeRacerVArchiveTool
                 {
                     elfFileStream.Seek((long)tocAddress, SeekOrigin.Begin);
 
-                    int i = 0;
-                    while (true)
+                    for (int i = 0; i < fileCount; i++)
                     {
                         TOC toc = new TOC();
                         bool result = toc.Unpack(elfFileStream);
@@ -226,9 +228,10 @@ namespace RidgeRacerVArchiveTool
                             destFileStream.Write(destBytes, 0x00, toc.compressedSize);
                         }
 
-                        i++;
-                        bgWorker.ReportProgress(i); // update progress var
+                        bgWorker.ReportProgress(i+1); // update progress var
                     }
+
+
                 }
             }
             catch
@@ -259,8 +262,6 @@ namespace RidgeRacerVArchiveTool
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        // Experimentally features.
-        // TODO: Implement "RollBack" features when Pack is faild.
         private void bgWorkerPack_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker bgWorker = (BackgroundWorker)sender;
@@ -279,7 +280,8 @@ namespace RidgeRacerVArchiveTool
             int fileCount;
             argments.TryGetValue("fileCount", out _str);
             int.TryParse(_str, out fileCount);
-
+            string destPath;
+            argments.TryGetValue("destPath", out destPath);
             string srcPath;
             argments.TryGetValue("srcPath", out srcPath);
 
@@ -290,35 +292,47 @@ namespace RidgeRacerVArchiveTool
                 return;
             }
 
+            string elfPathMod = $@"{destPath}\{Path.GetFileName(elfPath)}";
+            string arcPathMod = $@"{destPath}\{Path.GetFileName(arcPath)}";
+
             try
             {
-                // elf file
-                using (FileStream elfFileStream = new FileStream(elfPath, FileMode.Open, FileAccess.ReadWrite))
-                // arc file
-                using (FileStream arcFileStream = new FileStream(arcPath, FileMode.Create, FileAccess.Write))
+                Directory.CreateDirectory(destPath);
+
+                // duplicate elf file
+                using (FileStream elfFileStream = new FileStream(elfPath, FileMode.Open, FileAccess.Read))
+                using (FileStream elfFileStreamMod = new FileStream(elfPathMod, FileMode.Create, FileAccess.Write))
+                {
+                    elfFileStream.CopyTo(elfFileStreamMod);
+                }
+
+                // mod elf file
+                using (FileStream elfFileStreamMod = new FileStream(elfPathMod, FileMode.Open, FileAccess.ReadWrite))
+                // mof arc file
+                using (FileStream arcFileStreamMod = new FileStream(arcPathMod, FileMode.Create, FileAccess.Write))
                 {
                     byte[] bytes = new byte[1];
 
                     int i = 0;
                     // Goto TOC Address
-                    elfFileStream.Seek(tocAddress, SeekOrigin.Begin);
+                    elfFileStreamMod.Seek(tocAddress, SeekOrigin.Begin);
                     foreach (string srcFilePath in fileSortList)
                     {
                         TOC toc = new TOC();
                         using (FileStream srcFileStream = new FileStream(srcFilePath, FileMode.Open, FileAccess.Read))
                         {
-                            if (arcFileStream.Position > 1)
+                            if (arcFileStreamMod.Position > 1)
                             {
-                                toc.blockOffset = (int)arcFileStream.Position / 0x800;
+                                toc.blockOffset = (int)arcFileStreamMod.Position / 0x800;
                             }
 
                             // Write TOC
-                            toc.Pack(srcFileStream, elfFileStream);
+                            toc.Pack(srcFileStream, elfFileStreamMod);
 
                             bytes = new byte[toc.compressedSize];
                             srcFileStream.Read(bytes, 0x00, toc.compressedSize);
                         }
-                        arcFileStream.Write(bytes, 0x00, toc.compressedSize);
+                        arcFileStreamMod.Write(bytes, 0x00, toc.compressedSize);
 
                         // padding
                         bytes = new byte[1];
@@ -326,20 +340,20 @@ namespace RidgeRacerVArchiveTool
                         int padding = (toc.blockSize * 0x800) - (toc.compressedSize);
                         for (int j = 0; j < padding; j++)
                         {
-                            arcFileStream.Write(bytes, 0x00, bytes.Length);
+                            arcFileStreamMod.Write(bytes, 0x00, bytes.Length);
                         }
 
+                        bgWorker.ReportProgress(i+1); // update progress var
                         i++;
-                        bgWorker.ReportProgress(i); // update progress var
                     }
 
                     // check teminator of TOC
                     bytes = new byte[4];
-                    elfFileStream.Read(bytes, 0x00, bytes.Length);
+                    elfFileStreamMod.Read(bytes, 0x00, bytes.Length);
                     int terminator = BitConverter.ToInt32(bytes, 0x00);
                     if (terminator != 0xCC0000)
                     {
-                        MessageBox.Show("Faild: Pack.");
+                        MessageBox.Show("Faild: Pack. unexpected terminator");
                         return;
                     }
                 }

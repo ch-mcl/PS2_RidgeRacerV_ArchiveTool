@@ -12,19 +12,19 @@ namespace RidgeRacerVArchiveTool.RR5_Lib
         public DataTable tocTable;
 
         /// <summary>
-        /// TOC Table name.
+        /// TOC Table.
         /// </summary>
         public const string TBL_NAME = "RR5 TOC Address";
         /// <summary>
-        /// Region column.
+        /// Region.
         /// </summary>
         public string COL_NAME_REGION = "region";
         /// <summary>
-        /// Archive File name column.
+        /// Archive File name.
         /// </summary>
         public string COL_NAME_ARC = "arcName";
         /// <summary>
-        /// elf file name column.
+        /// elf file name.
         /// </summary>
         public string COL_NAME_ELF = "elfName";
         /// <summary>
@@ -76,7 +76,7 @@ namespace RidgeRacerVArchiveTool.RR5_Lib
             row[COL_NAME_MAX_TOC] = 1208;
             dataSet.Tables[TBL_NAME].Rows.Add(row);
 
-            // AC_RRV3_A (Aracade Battle RRV3 Ver A)
+            // AC_RRV3_A (Arcade Battle RRV3 Ver A)
             row = tocTable.NewRow();
             row[COL_NAME_REGION] = "AC_RRV3_A";
             row[COL_NAME_ARC] = "RRV1_A";
