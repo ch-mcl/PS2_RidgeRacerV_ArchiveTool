@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 
 namespace RidgeRacerVArchiveTool
@@ -199,7 +200,11 @@ namespace RidgeRacerVArchiveTool
                 using (FileStream elfFileStream = new FileStream(elfPath, FileMode.Open, FileAccess.Read))
                 // arc file
                 using (FileStream arcFileStream = new FileStream(arcPath, FileMode.Open, FileAccess.Read))
+                // csv file
+                using (StreamWriter streamWriterHashList = new StreamWriter($@"{destPath}\hashList.csv"))
                 {
+                    streamWriterHashList.WriteLine("Id, Id (Hex), Hash (SHA1), Compress");
+
                     elfFileStream.Seek((long)tocAddress, SeekOrigin.Begin);
 
                     for (int i = 0; i < fileCount; i++)
@@ -221,11 +226,17 @@ namespace RidgeRacerVArchiveTool
                         string destFileName = string.Format("{0:D8}.{1}", i, extention);
                         string fullpath = $@"{destPath}\{destFileName}";
                         using (FileStream destFileStream = new FileStream(fullpath, FileMode.Create, FileAccess.Write))
+                        using (SHA1 sha1 = SHA1.Create())
                         {
                             byte[] destBytes = new byte[toc.compressedSize];
                             arcFileStream.Seek(toc.blockOffset * 0x800, SeekOrigin.Begin);
                             arcFileStream.Read(destBytes, 0x00, toc.compressedSize);
                             destFileStream.Write(destBytes, 0x00, toc.compressedSize);
+
+                            byte[] hash = sha1.ComputeHash(destBytes);
+                            string row = String.Format("{0:D8}, {0:X8}, {1}, {2}", i, BitConverter.ToString(hash).Replace("-", ""), (toc.compressedSize < toc.uncompressedSize ? "Yes" : "No"));
+                            streamWriterHashList.WriteLine(row);
+
                         }
 
                         bgWorker.ReportProgress(i+1); // update progress var
