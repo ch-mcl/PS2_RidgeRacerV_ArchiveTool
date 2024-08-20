@@ -48,9 +48,9 @@ namespace RidgeRacerVArchiveTool.RR5_Lib
             tocTable.Columns.Add(COL_NAME_MAX_TOC, Type.GetType("System.Int32")); // 4
 
             dataSet.Tables.Add(tocTable);
+            DataRow row = tocTable.NewRow();
 
             // JP
-            DataRow row = tocTable.NewRow();
             row[COL_NAME_REGION] = "JP";
             row[COL_NAME_ARC] = "R5.ALL";
             row[COL_NAME_ELF] = "SLPS_200.01";
@@ -83,6 +83,15 @@ namespace RidgeRacerVArchiveTool.RR5_Lib
             row[COL_NAME_ELF] = "rrv3vera.ic002";
             row[COL_NAME_TOC_ADR] = 0x1AB398;
             row[COL_NAME_MAX_TOC] = 1155;
+            dataSet.Tables[TBL_NAME].Rows.Add(row);
+
+            // JP DEMO
+            row = tocTable.NewRow();
+            row[COL_NAME_REGION] = "JP_DEMO";
+            row[COL_NAME_ARC] = "R5.ALL";
+            row[COL_NAME_ELF] = "SLPM_601.09";
+            row[COL_NAME_TOC_ADR] = 0xFD2E0;
+            row[COL_NAME_MAX_TOC] = 1320;
             dataSet.Tables[TBL_NAME].Rows.Add(row);
 
         }

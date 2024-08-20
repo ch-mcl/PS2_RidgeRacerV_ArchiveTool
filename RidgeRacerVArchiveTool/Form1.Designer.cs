@@ -33,6 +33,7 @@
             this.bgWorkerPack = new System.ComponentModel.BackgroundWorker();
             this.bgWorkerUnpack = new System.ComponentModel.BackgroundWorker();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioJPDEMO = new System.Windows.Forms.RadioButton();
             this.radioJP = new System.Windows.Forms.RadioButton();
             this.radioACV3A = new System.Windows.Forms.RadioButton();
             this.radioUS = new System.Windows.Forms.RadioButton();
@@ -70,6 +71,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.radioJPDEMO);
             this.groupBox1.Controls.Add(this.radioJP);
             this.groupBox1.Controls.Add(this.radioACV3A);
             this.groupBox1.Controls.Add(this.radioUS);
@@ -81,6 +83,19 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Region of Ridge Racer V";
             // 
+            // radioJPDEMO
+            // 
+            this.radioJPDEMO.AutoSize = true;
+            this.radioJPDEMO.Checked = global::RidgeRacerVArchiveTool.Properties.Settings.Default.JPDEMOchecked;
+            this.radioJPDEMO.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::RidgeRacerVArchiveTool.Properties.Settings.Default, "JPDEMOchecked", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.radioJPDEMO.Location = new System.Drawing.Point(206, 18);
+            this.radioJPDEMO.Name = "radioJPDEMO";
+            this.radioJPDEMO.Size = new System.Drawing.Size(77, 16);
+            this.radioJPDEMO.TabIndex = 7;
+            this.radioJPDEMO.Text = "JP(DEMO)";
+            this.radioJPDEMO.UseVisualStyleBackColor = true;
+            this.radioJPDEMO.MouseClick += new System.Windows.Forms.MouseEventHandler(this.radioJPDEMO_MouseClick);
+            // 
             // radioJP
             // 
             this.radioJP.AutoSize = true;
@@ -90,7 +105,6 @@
             this.radioJP.Name = "radioJP";
             this.radioJP.Size = new System.Drawing.Size(37, 16);
             this.radioJP.TabIndex = 3;
-            this.radioJP.TabStop = true;
             this.radioJP.Text = "JP";
             this.radioJP.UseVisualStyleBackColor = true;
             this.radioJP.MouseClick += new System.Windows.Forms.MouseEventHandler(this.radioJP_MouseClick);
@@ -163,6 +177,7 @@
         private System.Windows.Forms.RadioButton radioUS;
         private System.Windows.Forms.RadioButton radioPAL;
         private System.Windows.Forms.RadioButton radioACV3A;
+        private System.Windows.Forms.RadioButton radioJPDEMO;
         private System.Windows.Forms.GroupBox groupBox1;
     }
 }

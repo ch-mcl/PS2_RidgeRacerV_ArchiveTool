@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Windows.Forms;
+using static RidgeRacerVArchiveTool.RR5_Lib.RR5_TOC_Table;
 
 namespace RidgeRacerVArchiveTool
 {
@@ -36,12 +37,13 @@ namespace RidgeRacerVArchiveTool
             progressBar1.Minimum = 0;
             progressBar1.Value = 0;
 
-            label1.Text = "Execeution..."; //
+            label1.Text = "Execeution...";
 
-            radioJP.Enabled = false; //
-            radioUS.Enabled = false; //
-            radioPAL.Enabled = false; //
-            radioACV3A.Enabled = false; //
+            radioJP.Enabled = false;
+            radioUS.Enabled = false;
+            radioPAL.Enabled = false;
+            radioACV3A.Enabled = false;
+            radioJPDEMO.Enabled = false; 
 
             string region = "";
             if (radioJP.Checked == true)
@@ -59,6 +61,10 @@ namespace RidgeRacerVArchiveTool
             else if (radioACV3A.Checked == true)
             {
                 region = "AC_RRV3_A";
+            }
+            else if (radioJPDEMO.Checked == true)
+            {
+                region = "JP_DEMO";
             }
 
             if (region.Length < 1)
@@ -143,6 +149,7 @@ namespace RidgeRacerVArchiveTool
             radioUS.Checked = false;
             radioPAL.Checked = false;
             radioACV3A.Checked = false;
+            radioJPDEMO.Checked = false;
         }
 
         private void radioUS_MouseClick(object sender, MouseEventArgs e)
@@ -151,6 +158,7 @@ namespace RidgeRacerVArchiveTool
             radioUS.Checked = true;
             radioPAL.Checked = false;
             radioACV3A.Checked = false;
+            radioJPDEMO.Checked = false;
         }
 
         private void radioPAL_MouseClick(object sender, MouseEventArgs e)
@@ -159,6 +167,7 @@ namespace RidgeRacerVArchiveTool
             radioUS.Checked = false;
             radioPAL.Checked = true;
             radioACV3A.Checked = false;
+            radioJPDEMO.Checked = false;
         }
 
 
@@ -168,8 +177,17 @@ namespace RidgeRacerVArchiveTool
             radioUS.Checked = false;
             radioPAL.Checked = false;
             radioACV3A.Checked = true;
+            radioJPDEMO.Checked = false;
         }
 
+        private void radioJPDEMO_MouseClick(object sender, MouseEventArgs e)
+        {
+            radioJP.Checked = false;
+            radioUS.Checked = false;
+            radioPAL.Checked = false;
+            radioACV3A.Checked = false;
+            radioJPDEMO.Checked = true;
+        }
 
         private void bgWorkerUnpack_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -391,6 +409,5 @@ namespace RidgeRacerVArchiveTool
 
             Close();
         }
-
     }
 }

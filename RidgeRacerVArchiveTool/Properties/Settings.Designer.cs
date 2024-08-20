@@ -22,19 +22,7 @@ namespace RidgeRacerVArchiveTool.Properties {
                 return defaultInstance;
             }
         }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool JPchecked {
-            get {
-                return ((bool)(this["JPchecked"]));
-            }
-            set {
-                this["JPchecked"] = value;
-            }
-        }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
@@ -62,12 +50,36 @@ namespace RidgeRacerVArchiveTool.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool JPchecked {
+            get {
+                return ((bool)(this["JPchecked"]));
+            }
+            set {
+                this["JPchecked"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool ACV3Achecked {
             get {
                 return ((bool)(this["ACV3Achecked"]));
             }
             set {
                 this["ACV3Achecked"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool JPDEMOchecked {
+            get {
+                return ((bool)(this["JPDEMOchecked"]));
+            }
+            set {
+                this["JPDEMOchecked"] = value;
             }
         }
     }
