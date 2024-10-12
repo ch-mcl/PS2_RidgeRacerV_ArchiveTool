@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32929.386
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RRVDecompress", "RRVDecompress\RRVDecompress.csproj", "{9447186B-3170-4CA2-8510-19CBEE69D0D8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9447186B-3170-4CA2-8510-19CBEE69D0D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9447186B-3170-4CA2-8510-19CBEE69D0D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9447186B-3170-4CA2-8510-19CBEE69D0D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9447186B-3170-4CA2-8510-19CBEE69D0D8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F75D518E-0D88-4C96-858E-C3FD4D92BE9D}
+	EndGlobalSection
+EndGlobal

@@ -1,3 +1,6 @@
 .vs
 RidgeRacerVArchiveTool/obj
 RidgeRacerVArchiveTool/bin
+RRVDecompress/bin/
+RRVDecompress/obj/Debug/.NETFramework,Version=v4.7.2.AssemblyAttributes.cs
+RRVDecompress/obj/
