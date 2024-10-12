@@ -1,11 +1,11 @@
-﻿using RidgeRacerVArchiveTool.RR5_Lib;
+﻿using RidgeRacerVArchiveTool.Models;
+using RidgeRacerVArchiveTool.RR5_Lib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Windows.Forms;
 using static RidgeRacerVArchiveTool.RR5_Lib.RR5_TOC_Table;
 
@@ -105,17 +105,16 @@ namespace RidgeRacerVArchiveTool
                 }
                 string arcPath = $@"{fileDirectory}\{arcName}";
 
-                Dictionary<string, string> argments = new Dictionary<string, string>();
-                argments.Add("elfPath", elfPath);
-                argments.Add("arcPath", arcPath);
-                argments.Add("tocAddress", tocAddress.ToString());
-                argments.Add("fileCount", fileCount.ToString());
+                ArgsDoWorker argments = new ArgsDoWorker();
+                argments.elfPath = elfPath;
+                argments.arcPath = arcPath;
+                argments.tocAddress = tocAddress;
+                argments.fileCount = fileCount;
 
                 // Unpack
                 if (arcName.Equals(fileName))
                 {
-                    string destPath = $@"{fileDirectory}\{fileName.Replace('.', '_')}_unpack";
-                    argments.Add("destPath", destPath);
+                    argments.destPath = $@"{fileDirectory}\{fileName.Replace('.', '_')}_unpack";
 
                     bgWorkerUnpack.WorkerReportsProgress = true;
                     bgWorkerUnpack.RunWorkerAsync(argments);
@@ -124,10 +123,8 @@ namespace RidgeRacerVArchiveTool
                 }
                 else if (isDirectory)
                 {
-                    string destPath = $@"{fileDirectory}\pack";
-                    argments.Add("destPath", destPath);
-                    string srcPath = path[i];
-                    argments.Add("srcPath", srcPath);
+                    argments.destPath = $@"{fileDirectory}\pack";
+                    argments.srcPath = path[i];
 
                     bgWorkerPack.WorkerReportsProgress = true;
                     bgWorkerPack.RunWorkerAsync(argments);
@@ -193,22 +190,12 @@ namespace RidgeRacerVArchiveTool
         {
             BackgroundWorker bgWorker = (BackgroundWorker)sender;
 
-            Dictionary<string, string> argments = e.Argument as Dictionary<string, string>;
-            string fileName;
-            argments.TryGetValue("fileName", out fileName);
-            string elfPath;
-            argments.TryGetValue("elfPath", out elfPath);
-            string arcPath;
-            argments.TryGetValue("arcPath", out arcPath);
-            string _str;
-            argments.TryGetValue("tocAddress", out _str);
-            int tocAddress;
-            int.TryParse(_str, out tocAddress);
-            int fileCount;
-            argments.TryGetValue("fileCount", out _str);
-            int.TryParse(_str, out fileCount);
-            string destPath;
-            argments.TryGetValue("destPath", out destPath);
+            ArgsDoWorker argments = e.Argument as ArgsDoWorker;
+            string elfPath = argments.elfPath;
+            string arcPath = argments.arcPath;
+            int tocAddress = argments.tocAddress;
+            int fileCount = argments.fileCount;
+            string destPath =argments.destPath;
 
             try
             {
@@ -218,11 +205,7 @@ namespace RidgeRacerVArchiveTool
                 using (FileStream elfFileStream = new FileStream(elfPath, FileMode.Open, FileAccess.Read))
                 // arc file
                 using (FileStream arcFileStream = new FileStream(arcPath, FileMode.Open, FileAccess.Read))
-                // csv file
-                using (StreamWriter streamWriterHashList = new StreamWriter($@"{destPath}\hashList.csv"))
                 {
-                    streamWriterHashList.WriteLine("Id, Id (Hex), Hash (SHA1), Compress");
-
                     elfFileStream.Seek((long)tocAddress, SeekOrigin.Begin);
 
                     for (int i = 0; i < fileCount; i++)
@@ -244,17 +227,11 @@ namespace RidgeRacerVArchiveTool
                         string destFileName = string.Format("{0:D8}.{1}", i, extention);
                         string fullpath = $@"{destPath}\{destFileName}";
                         using (FileStream destFileStream = new FileStream(fullpath, FileMode.Create, FileAccess.Write))
-                        using (SHA1 sha1 = SHA1.Create())
                         {
                             byte[] destBytes = new byte[toc.compressedSize];
                             arcFileStream.Seek(toc.blockOffset * 0x800, SeekOrigin.Begin);
                             arcFileStream.Read(destBytes, 0x00, toc.compressedSize);
                             destFileStream.Write(destBytes, 0x00, toc.compressedSize);
-
-                            byte[] hash = sha1.ComputeHash(destBytes);
-                            string row = String.Format("{0:D8}, {0:X8}, {1}, {2}", i, BitConverter.ToString(hash).Replace("-", ""), (toc.compressedSize < toc.uncompressedSize ? "Yes" : "No"));
-                            streamWriterHashList.WriteLine(row);
-
                         }
 
                         bgWorker.ReportProgress(i+1); // update progress var
@@ -295,24 +272,14 @@ namespace RidgeRacerVArchiveTool
         {
             BackgroundWorker bgWorker = (BackgroundWorker)sender;
 
-            Dictionary<string, string> argments = e.Argument as Dictionary<string, string>;
-            string fileName;
-            argments.TryGetValue("fileName", out fileName);
-            string elfPath;
-            argments.TryGetValue("elfPath", out elfPath);
-            string arcPath;
-            argments.TryGetValue("arcPath", out arcPath);
-            string _str;
-            argments.TryGetValue("tocAddress", out _str);
-            int tocAddress;
-            int.TryParse(_str, out tocAddress);
-            int fileCount;
-            argments.TryGetValue("fileCount", out _str);
-            int.TryParse(_str, out fileCount);
-            string destPath;
-            argments.TryGetValue("destPath", out destPath);
-            string srcPath;
-            argments.TryGetValue("srcPath", out srcPath);
+            ArgsDoWorker argments = e.Argument as ArgsDoWorker;
+
+            string elfPath = argments.elfPath;
+            string arcPath = argments.arcPath;
+            int tocAddress = argments.tocAddress;
+            int fileCount = argments.fileCount;
+            string destPath = argments.destPath;
+            string srcPath = argments.srcPath;
 
             List<string> fileSortList = new List<string>(Directory.GetFiles(srcPath, "*", SearchOption.AllDirectories));
             if (fileSortList.Count != fileCount)
